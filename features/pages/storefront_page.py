@@ -3,22 +3,38 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import InvalidElementStateException
 import re
 
 class StorefrontPage(BasePage):
     _bijkorf_logo = (By.XPATH, '//div/a[@class="dbk-header--logo"]')
     _search_bar = (By.XPATH, '//form/input[@type="search"]')
+    _search_bar_mobile = (By.XPATH, '//*[@class="dbk-ocp-nav--wrap dbk-off-canvas-pane--slider"]/div/div/section/div/form/input')
+    _mobile_menu = (By.XPATH, '//*[@data-dbk-off-canvas-pane-toggle="dbk-ocp-nav"]')
+    _close_cookie_bar = (By.XPATH, '//div[@class="dbk-cookiebar"]/div/button')
 
     def visit_page(self, context):
         context.driver.get(context.base_url)
         # on loading the page, check that the logo is displayed
         self.wait_for_element_to_appear(context, self._bijkorf_logo)
+        self.wait_for_element_to_appear(context, self._close_cookie_bar)
+        self.find_element(context, self._close_cookie_bar).click()
         return StorefrontPage()
 
     def search_for_product(self, context, product):
-        self.find_element(context, self._search_bar).send_keys(product)
-        self.find_element(context, self._search_bar).send_keys(Keys.ENTER)
-        return SearchResultsPage(context)
+        try:
+            self.find_element(context, self._search_bar).send_keys(product)
+            self.find_element(context, self._search_bar).send_keys(Keys.ENTER)
+            return SearchResultsPage(context)
+        except InvalidElementStateException:
+            # mobile version returns multiple elements with same ID
+            # workaround is to open the menu and use the searchbar there
+            self.find_element(context, self._mobile_menu).click()
+            self.wait_for_element_to_appear(context, self._search_bar_mobile)
+            self.find_element(context, self._search_bar_mobile).click()
+            self.find_element(context, self._search_bar_mobile).send_keys(product)
+            self.find_element(context, self._search_bar_mobile).send_keys(Keys.ENTER)
+            return SearchResultsPage(context)
 
 class SearchResultsPage(BasePage):
     _search_results_header = (By.XPATH, '//h1/span[contains(@class, "lbl-search-term")]')
@@ -29,6 +45,7 @@ class SearchResultsPage(BasePage):
     def select_result_number(self, context, number):
         # reusable method to select a search result based on its number in the list
         result_number = (By.XPATH, '//ul[@data-dbk-productlist="plp"]/li[{number}]'.format(number=number))
+        self.scroll_into_view(context, result_number)
         self.find_element(context, result_number).click()
         return ProductDetailsPage(context)
 
@@ -46,6 +63,7 @@ class ProductDetailsPage(BasePage):
 
     def select_variant(self, context, text):
         # will select a variant of the product based on the text displayed in the dropdown
+        self.scroll_into_view(context, self._variant_dropdown)
         Select(self.find_element(context, self._variant_dropdown)).select_by_visible_text(text)
         return ProductDetailsPage(context)
 
