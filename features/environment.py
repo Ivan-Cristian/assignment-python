@@ -9,6 +9,14 @@ def before_all(context):
         'selenium.webdriver.remote.remote_connection')
     selenium_logger.setLevel(logging.INFO)
     context.base_url = "https://preview.debijenkorf.nl"
+
+    # currently, the system is set up to run on local Chrome browser;
+    # I haven't found a more elegant solution, though it is possible, to get
+    # the tests running in parallel in a BrowserStack instance; the way to get
+    # them running in different browsers on different OS is to comment line 30
+    # and then uncomment the desired_cap (either line 20, 21 or 22) as well as
+    # lines 23-25; this will run the tests in BrowserStack with the specified settings
+
     # desired_cap = {'os': 'OS X', 'os_version': 'Sierra', 'browser': 'Chrome', 'browser_version': '54.0' }
     # desired_cap = {'browserName': 'iPhone', 'platform': 'MAC', 'device': 'iPhone 6S Plus'}
     # desired_cap = {'browserName': 'android', 'platform': 'ANDROID', 'device': 'Samsung Galaxy S5'}

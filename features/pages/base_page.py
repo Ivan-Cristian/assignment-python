@@ -23,10 +23,6 @@ class BasePage(object):
     def scroll_into_view(self, context, to_element):
         from selenium.webdriver.common.action_chains import ActionChains
         ActionChains(context.driver).move_to_element(to_element)
-        # self._driver = context.driver
-        # self._actions = []
-        # self._actions.append(lambda: self._driver.execute(
-        #     Command.MOVE_TO, {'element': to_element.id}))
         return self
 
     def wait_for_element_to_disappear(self, context, locator):

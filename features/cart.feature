@@ -1,5 +1,6 @@
 Feature: Cart
 
+@cart
 Scenario Outline: Add product to cart
 Given I am at the storefront
 When I search for <product>
