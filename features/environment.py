@@ -12,23 +12,24 @@ def before_all(context):
 
     # currently, the system is set up to run on local Chrome browser;
     # I haven't found a more elegant solution, though it is possible, to get
-    # the tests running in parallel in a BrowserStack instance; the way to get
-    # them running in different browsers on different OS is to comment line 30
-    # and then uncomment the desired_cap (either line 20, 21 or 22) as well as
-    # lines 23-25; this will run the tests in BrowserStack with the specified settings
+    # the tests running in parallel in a BrowserStack instance;
+    # To get them to run parallel, uncomment the following 9 lines and comment
+    # line 33
 
-    # desired_cap = {'os': 'OS X', 'os_version': 'Sierra', 'browser': 'Chrome', 'browser_version': '54.0' }
-    # desired_cap = {'browserName': 'iPhone', 'platform': 'MAC', 'device': 'iPhone 6S Plus'}
-    # desired_cap = {'browserName': 'android', 'platform': 'ANDROID', 'device': 'Samsung Galaxy S5'}
-    # context.driver = webdriver.Remote(
-    # command_executor='http://cristianivan2:mKQpf6t7yGpXzd1T5Bek@hub.browserstack.com:80/wd/hub',
-    # desired_capabilities=desired_cap)
+    # desired_cap = []
+    # desired_cap.append({'os': 'OS X', 'os_version': 'Sierra', 'browser': 'Chrome', 'browser_version': '54.0' })
+    # desired_cap.append({'browserName': 'iPhone', 'platform': 'MAC', 'device': 'iPhone 6S Plus'})
+    # desired_cap.append({'browserName': 'android', 'platform': 'ANDROID', 'device': 'Samsung Galaxy S5'})
+    # for driver_instance in desired_cap:
+    #         driver_instance['browserstack.debug'] = True
+    #         context.driver = webdriver.Remote(
+    #         command_executor='http://cristianivan1:LSHUqy4qiydc9N8kkVnv@hub.browserstack.com:80/wd/hub',
+    #         desired_capabilities=driver_instance)
     try:
         context.driver.maximize_window()
     except:
         pass
     context.driver = webdriver.Chrome(executable_path="features/driver/chromedriver")
-
 
 def before_scenario(context, scenario):
     context.driver.delete_all_cookies()
