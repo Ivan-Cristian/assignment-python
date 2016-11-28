@@ -16,11 +16,11 @@ def step_impl(context):
 
 @when(u'I change the selected variant')
 def step_impl(context):
-    context.select_variant_36 = context.second_result_details_page\
-        .select_variant(context, '36')
+    context.select_variant_33 = context.second_result_details_page\
+        .select_variant(context, '33')
 
 @then(u'I can add the product to the Cart')
 def step_impl(context):
-    context.add_variant_to_cart = context.select_variant_36\
+    context.add_variant_to_cart = context.select_variant_33\
         .add_product_to_cart(context)\
         .verify_product_was_added_to_cart(context)

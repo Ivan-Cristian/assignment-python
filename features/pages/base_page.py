@@ -21,16 +21,21 @@ class BasePage(object):
             )
 
     def scroll_into_view(self, context, to_element):
-        self._driver = context.driver
-        self._actions = []
-        self._actions.append(lambda: self._driver.execute(
-            Command.MOVE_TO, {'element': to_element.id}))
+        from selenium.webdriver.common.action_chains import ActionChains
+        ActionChains(context.driver).move_to_element(to_element)
+        # self._driver = context.driver
+        # self._actions = []
+        # self._actions.append(lambda: self._driver.execute(
+        #     Command.MOVE_TO, {'element': to_element.id}))
         return self
 
     def wait_for_element_to_disappear(self, context, locator):
         WebDriverWait(context.driver, 15).until(
             EC.invisibility_of_element_located(locator)
         )
+    def find_by_text(self, context, text):
+        return context.driver.find_element(By.XPATH, '//*[contains(text(), "{text}")]'.format(text=text))
+
 
     def wait_for_element_to_appear(self, context, locator):
         WebDriverWait(context.driver, 15).until(
