@@ -23,7 +23,7 @@ def before_all(context):
     # for driver_instance in desired_cap:
     #         driver_instance['browserstack.debug'] = True
     #         context.driver = webdriver.Remote(
-    #         command_executor='http://cristianivan1:LSHUqy4qiydc9N8kkVnv@hub.browserstack.com:80/wd/hub',
+    #         command_executor='http://cristianivan2:mKQpf6t7yGpXzd1T5Bek@hub.browserstack.com:80/wd/hub',
     #         desired_capabilities=driver_instance)
     try:
         context.driver.maximize_window()
